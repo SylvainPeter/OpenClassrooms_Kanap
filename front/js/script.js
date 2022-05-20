@@ -1,21 +1,20 @@
-class Article {
-    constructor(jsonArticle) {
-        jsonArticle && Object.assign(this, jsonArticle);
-    }
-}
+fetch("http://localhost:3000/api/products") // Récupération des données de l'API
 
-fetch("http://localhost:3000/api/products")
     .then(res => res.json())
-    .then(jsonListArticle => {
-        for (let jsonArticle of jsonListArticle) {
-            let article = new Article(jsonArticle);
+
+    .then((sofaList) => { // Création des éléments à afficher dans index.html
+        sofaList.forEach((sofa) => {
             document.querySelector(".items").innerHTML +=
-                `<a href="http://localhost:3000/api/products/${article._id}">
-                <article>
-                  <img src="${article.imageUrl}" alt="Lorem ipsum dolor sit amet, Kanap name1">
-                  <h3 class="productName">${article.name}</h3>
-                  <p class="productDescription">${article.description}</p>
-                </article>
-              </a>`;
-        }
+                `<a href="./product.html?id=${sofa._id}">
+                 <article>
+                 <img src="${sofa.imageUrl}" alt="${sofa.altTxt}"/>
+                 <h3 class="productName">${sofa.name}</h3>
+                 <p class="productDescription">${sofa.description}</p>
+                 </article>
+                 </a>`;
+        });
+    })
+
+    .catch((e) => { // En cas d'erreur de récupération des données
+        document.querySelector(".items").innerHTML += `<p>Désolé, aucun produit disponible</p>`;
     })
