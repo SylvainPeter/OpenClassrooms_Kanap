@@ -1,4 +1,4 @@
-let apiUrl = "http://localhost:3000/api/products"; // Coordonnées de l'API
+const apiUrl = "http://localhost:3000/api/products"; // Coordonnées de l'API
 
 fetch(apiUrl) // Récupération des données de l'API
     .then(res => res.json())
@@ -14,7 +14,7 @@ fetch(apiUrl) // Récupération des données de l'API
         console.log(err);
     })
 
-    let displayProduct = (sofa) => { // Création d'une fiche canapé
+    const displayProduct = (sofa) => { // Création d'une fiche canapé
         return `<a href="./product.html?id=${sofa._id}">
                 <article>
                 <img src="${sofa.imageUrl}" alt="${sofa.altTxt}"/>
