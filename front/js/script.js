@@ -1,25 +1,29 @@
-const apiUrl = "http://localhost:3000/api/products"; // Coordonnées de l'API
+// Coordonnées de l'API
+const apiUrl = "http://localhost:3000/api/products";
 
-fetch(apiUrl) // Récupération des données de l'API
+// Création d'une fiche canapé
+const displayProduct = (sofa) => {
+    return `<a href="./product.html?id=${sofa._id}">
+            <article>
+            <img src="${sofa.imageUrl}" alt="${sofa.altTxt}"/>
+            <h3 class="productName">${sofa.name}</h3>
+            <p class="productDescription">${sofa.description}</p>
+            </article>
+            </a>`
+}
+
+// Récupération des données de l'API
+fetch(apiUrl)
     .then(res => res.json())
-
-    .then((sofaList) => { // Insertion des fiches dans index.html
+    // Insertion des fiches dans la page index.html
+    .then((sofaList) => {
         sofaList.forEach((sofa) => {
             document.querySelector(".items").innerHTML += displayProduct(sofa);
         });
     })
-
-    .catch((err) => { // En cas d'erreur de récupération des données
+    // En cas d'erreur de récupération des données
+    .catch((err) => {
         document.querySelector(".items").innerHTML += `<p>Désolé, aucun produit disponible</p>`;
         console.log(err);
     })
 
-    const displayProduct = (sofa) => { // Création d'une fiche canapé
-        return `<a href="./product.html?id=${sofa._id}">
-                <article>
-                <img src="${sofa.imageUrl}" alt="${sofa.altTxt}"/>
-                <h3 class="productName">${sofa.name}</h3>
-                <p class="productDescription">${sofa.description}</p>
-                </article>
-                </a>`
-    }
