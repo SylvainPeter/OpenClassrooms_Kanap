@@ -9,6 +9,7 @@ let quantitySelection = document.querySelector("#quantity");
 
 
 // Récupération des données de l'API
+let getDataById = () => {
 fetch(apiUrl + "/" + productID)
     .then(res => res.json())
     .then(sofa => showProduct(sofa))
@@ -16,9 +17,10 @@ fetch(apiUrl + "/" + productID)
     .catch((err) => {
         console.log(err);
     })
+}
 
 // Affiche les informations du canapé dans la page product.html
-const showProduct = (sofa) => {
+let showProduct = (sofa) => {
     document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
     document.querySelector("#title").textContent = sofa.name;
     document.querySelector("#description").textContent = sofa.description;
@@ -31,6 +33,8 @@ const showProduct = (sofa) => {
         productColor.innerHTML = color;
     }
 }
+
+getDataById();
 
 
 //Ecoute le bouton "Ajouter au panier"
@@ -51,7 +55,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
 })
 
 // Ajoute le produit au panier
-const addProductToCart = () => {
+let addProductToCart = () => {
     let productChoice = document.querySelector("#title").textContent;
     let colorChoice = document.querySelector("#colors").value;
     let quantityChoice = document.querySelector("#quantity").value;
