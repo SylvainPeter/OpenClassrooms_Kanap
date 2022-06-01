@@ -1,28 +1,28 @@
 import { getDataById } from "./api.js";
 
-const productID = new URL(location).searchParams.get("id"); // Récupération de l'ID du canapé
+
+// Initialisation du panier
+let emptycart = [];
+let cart = localStorage.getItem("cart");
+if (cart == null) { // Si le panier n'existe pas, on le créé
+    localStorage.setItem("cart", JSON.stringify(emptycart));
+}
+else {
+    JSON.parse(cart); // Si le panier existe déjà, on récupère son contenu
+}
+
+
+let productID = new URL(location).searchParams.get("id"); // Récupération de l'ID du canapé
 
 // Récupération des données du canapé correspondant à cet ID
-let sofa = await getDataById(productID); 
+let sofa = await getDataById(productID);
 
 // Insertion des infos dans la page product.html
 showProduct(sofa);
 
-function showProduct (sofa) { // Structure d'une page canapé
-    document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
-    document.querySelector("#title").textContent = sofa.name;
-    document.querySelector("#description").textContent = sofa.description;
-    document.querySelector("#price").textContent = sofa.price;
-    for (let color of sofa.colors) { // Options de couleur et de quantité
-        let productColor = document.createElement("option");
-        document.querySelector("#colors").appendChild(productColor);
-        productColor.value = color;
-        productColor.innerHTML = color;
-    }
-}
 
 //Ecoute le bouton "Ajouter au panier"
-document.querySelector("#addToCart").addEventListener("click", (event) => { 
+document.querySelector("#addToCart").addEventListener("click", (event) => {
     let colorSelection = document.querySelector("#colors"); // Choix utilisateur couleur
     let quantitySelection = document.querySelector("#quantity"); // Choix utilisateur quantité
     if (colorSelection.value == "") { //Si couleur pas définie, message d'erreur
@@ -38,42 +38,41 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
         let quantityChoice = document.querySelector("#quantity").value;
         alert(`Votre commande de ${quantityChoice} ${productChoice} couleur ${colorChoice} est ajoutée au panier !`);
         addToCart({ // on stocke les infos dans le localStorage
-            id : parseInt(productID), 
-            "name": productChoice, 
-            "color" : colorChoice, 
-            "quantity" : parseInt(quantityChoice),
-            "price": parseInt(productPrice), 
-            "imageUrl" : sofa.imageUrl,
-            "altTxt" : sofa.altTxt
+            id: parseInt(productID),
+            "name": productChoice,
+            "color": colorChoice,
+            "quantity": parseInt(quantityChoice),
+            "price": parseInt(productPrice),
+            "imageUrl": sofa.imageUrl,
+            "altTxt": sofa.altTxt
         });
     }
 })
 
-// Sauve le panier
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-}
 
-// Récupère le panier
-function getCart() {
-    let cart = localStorage.getItem("cart");
-    if (cart == null) {
-        return [];
-    }
-    else {
-        return JSON.parse(cart);
+// Structure d'une page canapé
+function showProduct(sofa) { 
+    document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
+    document.querySelector("#title").textContent = sofa.name;
+    document.querySelector("#description").textContent = sofa.description;
+    document.querySelector("#price").textContent = sofa.price;
+    for (let color of sofa.colors) { // Options de couleur et de quantité
+        let productColor = document.createElement("option");
+        document.querySelector("#colors").appendChild(productColor);
+        productColor.value = color;
+        productColor.innerHTML = color;
     }
 }
 
 // Ajoute un produit au panier
 function addToCart(product) {
-    let cart = getCart(); // récupère le panier
+    let cart = JSON.parse(localStorage.getItem("cart"));// Récupère le panier
     let foundSameProduct = cart.find(p => p.id == product.id && p.color == product.color);
-    if (foundSameProduct != undefined) { // si un produit de cette couleur existe déjà
-        foundSameProduct.quantity += product.quantity; // on augmente juste sa quantité
+    if (foundSameProduct != undefined) { // Si un produit de cette couleur existe déjà
+        foundSameProduct.quantity += product.quantity; // On augmente juste sa quantité
     }
     else {
-        cart.push(product); // si un produit de cette couleur n'existe pas, on ajoute nouveau produit au panier
+        cart.push(product); // Si un produit de cette couleur n'existe pas, on ajoute nouveau produit au panier
     }
-    saveCart(cart); // on sauve le panier
+    localStorage.setItem("cart", JSON.stringify(cart)); // On sauve le panier
 }

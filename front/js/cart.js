@@ -1,8 +1,8 @@
-let list = JSON.parse(localStorage.getItem("cart"));
+let productsList = JSON.parse(localStorage.getItem("cart"));
 
 
 // Insertion des données dans la page index.html
-list.forEach((article) => {
+productsList.forEach((article) => {
     document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
 })
 
@@ -16,7 +16,7 @@ function displayCartProducts (article) { // Structure d'une fiche canapé
         <div class="cart__item__content__description">
             <h2>${article.name}</h2>
             <p>${article.color}</p>
-            <p id="article__price">${article.totalPrice} €</p>
+            <p id="article__price">${article.price} €</p>
         </div>
     <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
@@ -30,10 +30,6 @@ function displayCartProducts (article) { // Structure d'une fiche canapé
     </div>
  </article>`;
 }
-
-
-// FONCTIONS DU PANIER
-
 
 
 // Supprime un produit du panier
