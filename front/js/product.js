@@ -1,5 +1,5 @@
 import { getDataById } from "./api.js";
-import { addToCart, changeQuantity } from "./cart.js";
+import { addToCart } from "./cart.js";
 
 const productID = new URL(location).searchParams.get("id"); // Récupération de l'ID du canapé
 
@@ -38,7 +38,15 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
         let colorChoice = document.querySelector("#colors").value;
         let quantityChoice = document.querySelector("#quantity").value;
         alert(`Votre commande de ${quantityChoice} ${productChoice} couleur ${colorChoice} est ajoutée au panier !`);
-        addToCart({id : parseInt(productID), "name": productChoice, "price": parseInt(productPrice), "color" : colorChoice, "quantity" : parseInt(quantityChoice)});
+        addToCart({
+            id : parseInt(productID), 
+            "name": productChoice, 
+            "color" : colorChoice, 
+            "quantity" : parseInt(quantityChoice),
+            "price": parseInt(productPrice), 
+            "imageUrl" : sofa.imageUrl,
+            "altTxt" : sofa.altTxt
+        });
     }
 })
 
