@@ -50,7 +50,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
 })
 
 
-// Structure d'une page canapé
+// Structure de l'affichage d'une page canapé
 function showProduct(sofa) { 
     document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
     document.querySelector("#title").textContent = sofa.name;
