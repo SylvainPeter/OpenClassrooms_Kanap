@@ -1,5 +1,4 @@
 import { getDataById } from "./api.js";
-import { addToCart } from "./cart.js";
 
 const productID = new URL(location).searchParams.get("id"); // Récupération de l'ID du canapé
 
@@ -38,7 +37,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
         let colorChoice = document.querySelector("#colors").value;
         let quantityChoice = document.querySelector("#quantity").value;
         alert(`Votre commande de ${quantityChoice} ${productChoice} couleur ${colorChoice} est ajoutée au panier !`);
-        addToCart({
+        addToCart({ // on stocke les infos dans le localStorage
             id : parseInt(productID), 
             "name": productChoice, 
             "color" : colorChoice, 
@@ -50,3 +49,31 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
     }
 })
 
+// Sauve le panier
+function saveCart(cart) {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// Récupère le panier
+function getCart() {
+    let cart = localStorage.getItem("cart");
+    if (cart == null) {
+        return [];
+    }
+    else {
+        return JSON.parse(cart);
+    }
+}
+
+// Ajoute un produit au panier
+function addToCart(product) {
+    let cart = getCart(); // récupère le panier
+    let foundSameProduct = cart.find(p => p.id == product.id && p.color == product.color);
+    if (foundSameProduct != undefined) { // si un produit de cette couleur existe déjà
+        foundSameProduct.quantity += product.quantity; // on augmente juste sa quantité
+    }
+    else {
+        cart.push(product); // si un produit de cette couleur n'existe pas, on ajoute nouveau produit au panier
+    }
+    saveCart(cart); // on sauve le panier
+}

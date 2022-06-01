@@ -1,33 +1,40 @@
+let list = JSON.parse(localStorage.getItem("cart"));
+
+
+// Insertion des données dans la page index.html
+list.forEach((article) => {
+    document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
+})
+
+
+function displayCartProducts (article) { // Structure d'une fiche canapé
+    return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
+    <div class="cart__item__img">
+        <img src="${article.imageUrl}" alt="${article.altTxt}">
+    </div>
+    <div class="cart__item__content">
+        <div class="cart__item__content__description">
+            <h2>${article.name}</h2>
+            <p>${article.color}</p>
+            <p id="article__price">${article.totalPrice} €</p>
+        </div>
+    <div class="cart__item__content__settings">
+        <div class="cart__item__content__settings__quantity">
+            <p>Qté : ${article.quantity}</p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${article.quantity}">
+        </div>
+        <div class="cart__item__content__settings__delete">
+            <p class="deleteItem">Supprimer</p>
+        </div>
+    </div>
+    </div>
+ </article>`;
+}
+
+
 // FONCTIONS DU PANIER
 
-// Sauve le panier
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-}
 
-// Récupère le panier
-function getCart() {
-    let cart = localStorage.getItem("cart");
-    if (cart == null) {
-        return [];
-    }
-    else {
-        return JSON.parse(cart);
-    }
-}
-
-// Ajoute un produit au panier
-function addToCart(product) {
-    let cart = getCart(); // récupère le panier
-    let foundSameProduct = cart.find(p => p.id == product.id && p.color == product.color);
-    if (foundSameProduct != undefined) { // si un produit de cette couleur existe déjà
-        foundSameProduct.quantity += product.quantity; // on augmente sa quantité
-    }
-    else {
-        cart.push(product); // si un produit de cette couleur n'existe pas, on ajoute nouveau produit au panier
-    }
-    saveCart(cart); // on sauve le panier
-}
 
 // Supprime un produit du panier
 function removeFromCart(product) {
@@ -50,7 +57,6 @@ function changeQuantity(product, quantity) {
         }
     }
 }
-*/
 
 // Retourne le nombre de produits dans le panier
 function getNumberProduct() {
@@ -61,6 +67,7 @@ function getNumberProduct() {
     }
     return number;
 }
+*/
 
 // Retourne le prix total du panier
 function getTotalPrice() {
@@ -72,4 +79,4 @@ function getTotalPrice() {
     return total;
 }
 
-export { addToCart }
+
