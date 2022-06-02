@@ -2,10 +2,10 @@ import { getDataById } from "./api.js";
 
 
 // Initialise le panier
-let emptycart = [];
+let emptyCart = [];
 let cart = localStorage.getItem("cart");
 if (cart == null) { // Si le panier n'existe pas, on le créé
-    localStorage.setItem("cart", JSON.stringify(emptycart));
+    localStorage.setItem("cart", JSON.stringify(emptyCart));
 }
 else {
     JSON.parse(cart); // Si le panier existe déjà, on récupère son contenu
@@ -13,12 +13,8 @@ else {
 
 
 let productID = new URL(location).searchParams.get("id"); // Récupère l'ID du canapé
-
-// Récupère les données du canapé correspondant à cet ID
-let sofa = await getDataById(productID);
-
-// Insert les infos dans product.html
-showProduct(sofa);
+let sofa = await getDataById(productID); // Récupère les données du canapé correspondant à cet ID
+showProduct(sofa); // Insère les infos dans product.html
 
 
 //Ecoute le bouton "Ajouter au panier"
@@ -31,13 +27,13 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
     else if (quantitySelection.value == 0 || quantitySelection.value > 100) { // Si quantité 0 ou <100, message d'erreur
         alert("Veuillez choisir une quantité entre 1 et 100 !");
     }
-    else { // Si couleur définie + quantité entre 1 et 100, ajout du produit au panier
+    else { // Si couleur définie + quantité entre 1 et 100, on ajoute le produit au panier
         let productChoice = document.querySelector("#title").textContent;
         let productPrice = document.querySelector("#price").textContent;
         let colorChoice = document.querySelector("#colors").value;
         let quantityChoice = document.querySelector("#quantity").value;
         alert(`Votre commande de ${quantityChoice} ${productChoice} couleur ${colorChoice} est ajoutée au panier !`);
-        addToCart({ // Stocke les infos dans le localStorage
+        addToCart({ // Et on stocke les infos dans le localStorage
             id: parseInt(productID),
             "name": productChoice,
             "color": colorChoice,
@@ -50,13 +46,13 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
 })
 
 
-// Card d'une page canapé
+// Card d'un canapé
 function showProduct(sofa) { 
     document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
     document.querySelector("#title").textContent = sofa.name;
     document.querySelector("#description").textContent = sofa.description;
     document.querySelector("#price").textContent = sofa.price;
-    for (let color of sofa.colors) { // Options de couleur et de quantité
+    for (let color of sofa.colors) { // Création des options de couleur
         let productColor = document.createElement("option");
         document.querySelector("#colors").appendChild(productColor);
         productColor.value = color;
@@ -72,7 +68,7 @@ function addToCart(product) {
         foundSameProduct.quantity += product.quantity; // On augmente juste sa quantité
     }
     else {
-        cart.push(product); // Si un produit de cette couleur n'existe pas, on ajoute nouveau produit au panier
+        cart.push(product); // Si un produit de cette couleur n'existe pas, on ajoute un nouveau produit au panier
     }
     localStorage.setItem("cart", JSON.stringify(cart)); // On sauve le panier
 }

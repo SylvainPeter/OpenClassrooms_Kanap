@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:3000/api/products"; // Coordonnées de l'API
 
-// Récupération des données de tous les canapés via l'API
+// Récupère les données de tous les canapés via l'API
 async function getData () {
     let data = await fetch(apiUrl)
         .then(res => res.json())
@@ -12,7 +12,7 @@ async function getData () {
     return data;
 }
 
-// Récupération des données d'un canapé particulier via l'API
+// Récupère les données d'un canapé particulier via l'API
 async function getDataById (productID) {
     let data = await fetch(apiUrl + "/" + productID)
         .then(res => res.json())

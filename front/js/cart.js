@@ -1,6 +1,6 @@
 // Affiche le panier
-let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits
-productsList.forEach((article) => { // Insert les produits dans cart.html
+let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés
+productsList.forEach((article) => { // Insère les produits dans cart.html
     document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
 })
 updateCart(); // Affiche la quantité et le prix total du panier

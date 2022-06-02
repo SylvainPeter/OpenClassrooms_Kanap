@@ -3,7 +3,7 @@ import { getData } from "./api.js";
 // Récupère les données de tous les canapés
 let sofaList = await getData();
 
-// Insert les cards dans la page index.html
+// Insère les cards dans la page index.html
 sofaList.forEach((sofa) => {
     document.querySelector(".items").innerHTML += displayProducts(sofa);
 })
