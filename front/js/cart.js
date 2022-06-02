@@ -1,7 +1,7 @@
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupération des articles du panier
 
 
-// Insertion des articles dans la page cart.html
+// Insertion du contenu du panier dans la page cart.html
 productsList.forEach((article) => {
     document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
 })
@@ -16,8 +16,18 @@ deleteButton.forEach((button, i) => {
 })
 
 
+// Ecoute du champ "Quantité"
+let quantityForm = document.querySelectorAll(".itemQuantity");
+quantityForm.forEach((form, i) => {
+    form.addEventListener("change", () => {
+        let newQuantity = form.value;
+        changeQuantity(i, newQuantity);
+    })
+})
+
+
 // Structure de l'affichage d'un article
-function displayCartProducts (article) { 
+function displayCartProducts(article) {
     return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
     <div class="cart__item__img">
         <img src="${article.imageUrl}" alt="${article.altTxt}">
@@ -30,7 +40,7 @@ function displayCartProducts (article) {
         </div>
     <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
-            <p>Qté : ${article.quantity}</p>
+            <p>Qté :</p>
             <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${article.quantity}">
         </div>
         <div class="cart__item__content__settings__delete">
@@ -47,6 +57,13 @@ function removeFromCart(i) {
     localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le panier
     location.reload();
 }
+
+// Change la quantité d'un produit
+function changeQuantity(product, quantity) {
+    productsList[product].quantity = quantity;
+    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le panier
+}
+
 
 
 /* Change la quantité d'un produit
