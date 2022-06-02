@@ -1,7 +1,7 @@
 import { getDataById } from "./api.js";
 
 
-// Initialisation du panier
+// Initialise le panier
 let emptycart = [];
 let cart = localStorage.getItem("cart");
 if (cart == null) { // Si le panier n'existe pas, on le créé
@@ -12,12 +12,12 @@ else {
 }
 
 
-let productID = new URL(location).searchParams.get("id"); // Récupération de l'ID du canapé
+let productID = new URL(location).searchParams.get("id"); // Récupère l'ID du canapé
 
-// Récupération des données du canapé correspondant à cet ID
+// Récupère les données du canapé correspondant à cet ID
 let sofa = await getDataById(productID);
 
-// Insertion des infos dans la page product.html
+// Insert les infos dans product.html
 showProduct(sofa);
 
 
@@ -37,7 +37,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
         let colorChoice = document.querySelector("#colors").value;
         let quantityChoice = document.querySelector("#quantity").value;
         alert(`Votre commande de ${quantityChoice} ${productChoice} couleur ${colorChoice} est ajoutée au panier !`);
-        addToCart({ // on stocke les infos dans le localStorage
+        addToCart({ // Stocke les infos dans le localStorage
             id: parseInt(productID),
             "name": productChoice,
             "color": colorChoice,
@@ -50,7 +50,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
 })
 
 
-// Structure de l'affichage d'une page canapé
+// Card d'une page canapé
 function showProduct(sofa) { 
     document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
     document.querySelector("#title").textContent = sofa.name;

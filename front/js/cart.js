@@ -1,32 +1,32 @@
-let productsList = JSON.parse(localStorage.getItem("cart")); // Récupération des articles du panier
-
-
-// Insertion du contenu du panier dans la page cart.html
-productsList.forEach((article) => {
+// Affiche le panier
+let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits
+productsList.forEach((article) => { // Insert les produits dans cart.html
     document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
 })
+updateCart(); // Affiche la quantité et le prix total du panier
 
 
-// Ecoute tous les boutons "Supprimer"
-let deleteButton = document.querySelectorAll(".deleteItem");
-deleteButton.forEach((button, i) => {
-    button.addEventListener("click", () => {
-        removeFromCart(i);
-    })
-})
-
-
-// Ecoute du champ "Quantité"
-let quantityForm = document.querySelectorAll(".itemQuantity");
-quantityForm.forEach((form, i) => {
+// Ecoute des champs "Quantité"
+let quantityForms = document.querySelectorAll(".itemQuantity");
+quantityForms.forEach((form, index) => {
     form.addEventListener("change", () => {
-        let newQuantity = form.value;
-        changeQuantity(i, newQuantity);
+        let newQuantity = parseInt(form.value);
+        changeQuantity(index, newQuantity); // Définit la nouvelle quantité
+        updateCart(); // Met à jour le total
+    })
+})
+
+// Ecoute des boutons "Supprimer"
+let deleteButtons = document.querySelectorAll(".deleteItem");
+deleteButtons.forEach((button, index) => {
+    button.addEventListener("click", () => {
+        removeFromCart(index); // Supprime le produit
+        updateCart(); // Met à jour le total
     })
 })
 
 
-// Structure de l'affichage d'un article
+// Card pour chaque produits
 function displayCartProducts(article) {
     return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
     <div class="cart__item__img">
@@ -52,51 +52,37 @@ function displayCartProducts(article) {
 }
 
 // Supprime un produit du panier
-function removeFromCart(i) {
-    productsList.splice(i, 1);
-    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le panier
+function removeFromCart(index) {
+    productsList.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le nouveau panier
     location.reload();
 }
 
 // Change la quantité d'un produit
 function changeQuantity(product, quantity) {
     productsList[product].quantity = quantity;
-    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le panier
+    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le nouveau panier
 }
 
-
-
-/* Change la quantité d'un produit
-function changeQuantity(product, quantity) {
-    let cart = getCart(); // récupère panier
-    let foundProduct = cart.find(p => p.id == product.id); // vérifie si le produit existe déjà
-    if (foundProduct != undefined) {  // s'il est déjà défini
-        foundProduct.quantity += quantity;  // on augmente sa quantité
-        if (foundProduct.quantity <= 0) {  // si la quantité est <=0
-            removeFromCart(foundProduct); // on le supprime
-        }
-        else {
-            saveCart(cart); // on sauve le panier
-        }
-    }
+// Affiche la quantité et le prix total du panier
+function updateCart() {
+    document.querySelector("#totalQuantity").innerHTML = getNumberProduct();
+    document.querySelector("#totalPrice").innerHTML = getTotalPrice();
 }
 
 // Retourne le nombre de produits dans le panier
 function getNumberProduct() {
-    let cart = getCart();
     let number = 0;
-    for (let product of cart) {
+    for (let product of productsList) {
         number += product.quantity;
     }
     return number;
 }
-*/
 
 // Retourne le prix total du panier
 function getTotalPrice() {
-    let cart = getCart();
     let total = 0;
-    for (let product of cart) {
+    for (let product of productsList) {
         total += product.quantity * product.price;
     }
     return total;
