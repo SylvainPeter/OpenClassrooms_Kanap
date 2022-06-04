@@ -11,8 +11,13 @@ let quantityForms = document.querySelectorAll(".itemQuantity");
 quantityForms.forEach((form, index) => {
     form.addEventListener("change", () => {
         let newQuantity = parseInt(form.value);
-        changeQuantity(index, newQuantity); // Définit la nouvelle quantité
-        updateCart(); // Met à jour le total
+        if (newQuantity <= 0 || newQuantity > 100) { // Si quantité <=0 ou <100, message d'erreur
+            alert("Veuillez choisir une quantité entre 1 et 100 !");
+        }
+        else {
+            changeQuantity(index, newQuantity); // Définit la nouvelle quantité
+            updateCart(); // Met à jour le total
+        }
     })
 })
 

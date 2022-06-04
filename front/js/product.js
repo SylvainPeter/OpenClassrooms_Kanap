@@ -24,7 +24,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
     if (colorSelection.value == "") { //Si couleur pas définie, message d'erreur
         alert("Veuillez choisir une couleur !");
     }
-    else if (quantitySelection.value == 0 || quantitySelection.value > 100) { // Si quantité 0 ou <100, message d'erreur
+    else if (quantitySelection.value <= 0 || quantitySelection.value > 100) { // Si quantité <=0 ou <100, message d'erreur
         alert("Veuillez choisir une quantité entre 1 et 100 !");
     }
     else { // Si couleur définie + quantité entre 1 et 100, on ajoute le produit au panier
