@@ -1,6 +1,6 @@
 // Affiche le panier
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés
-productsList.forEach((article) => { // Insère les produits dans cart.html
+productsList.forEach((article) => { // Insère les produits dans la page cart.html
     document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
 })
 updateCart(); // Affiche la quantité et le prix total du panier
@@ -31,7 +31,7 @@ deleteButtons.forEach((button, index) => {
 })
 
 
-// Card pour chaque produits
+// Card pour chaque produit
 function displayCartProducts(article) {
     return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
     <div class="cart__item__img">
@@ -60,7 +60,7 @@ function displayCartProducts(article) {
 function removeFromCart(index) {
     productsList.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le nouveau panier
-    location.reload();
+    location.reload(); // On actualise la page cart.html
 }
 
 // Change la quantité d'un produit
@@ -77,20 +77,20 @@ function updateCart() {
 
 // Retourne le nombre de produits dans le panier
 function getNumberProduct() {
-    let number = 0;
+    let totalNumber = 0;
     for (let product of productsList) {
-        number += product.quantity;
+        totalNumber += product.quantity;
     }
-    return number;
+    return totalNumber;
 }
 
 // Retourne le prix total du panier
 function getTotalPrice() {
-    let total = 0;
+    let totalPrice = 0;
     for (let product of productsList) {
-        total += product.quantity * product.price;
+        totalPrice += product.quantity * product.price;
     }
-    return total;
+    return totalPrice;
 }
 
 
