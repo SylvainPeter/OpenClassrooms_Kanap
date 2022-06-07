@@ -1,9 +1,21 @@
+import { getDataById } from "./api.js";
+
+
 // Affiche le panier
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés
-productsList.forEach((article) => { // Insère les produits dans la page cart.html
-    document.querySelector("#cart__items").innerHTML += displayCartProducts(article);
+
+
+// Génère le HTML
+let allProducts = ""; // string vide
+productsList.forEach((article) => { // pour chaque produit du panier
+    let data = getDataById(article.id); // recupère data du canapé via l'API
+    allProducts += displayCartProducts(article, data); // appelle function et rajoute le HTML à la string
 })
-updateCart(); // Affiche la quantité et le prix total du panier
+
+// Hydrate la page cart.html
+document.querySelector("#cart__items").innerHTML += allProducts;
+// Affiche la quantité et le prix total du panier
+updateCart();
 
 
 // Ecoute des champs "Quantité"
@@ -32,16 +44,17 @@ deleteButtons.forEach((button, index) => {
 
 
 // Card pour chaque produit
-function displayCartProducts(article) {
+function displayCartProducts(article, data) {
+    console.log(data); // pending ????
     return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
     <div class="cart__item__img">
-        <img src="${article.imageUrl}" alt="${article.altTxt}">
+        <img src="${data.imageUrl}" alt="${data.altTxt}">
     </div>
     <div class="cart__item__content">
         <div class="cart__item__content__description">
-            <h2>${article.name}</h2>
+            <h2>${data.name}</h2>
             <p>${article.color}</p>
-            <p id="article__price">${article.price} €</p>
+            <p id="article__price">${data.price} €</p>
         </div>
     <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">

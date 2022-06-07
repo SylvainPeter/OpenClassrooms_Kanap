@@ -4,34 +4,27 @@ import { getDataById } from "./api.js";
 
 
 let productID = new URL(location).searchParams.get("id"); // Récupère l'ID du canapé dans l'URL de la page product.html
+
 let sofa = await getDataById(productID); // Récupère les données du canapé correspondant à cet ID via l'API
 showProduct(sofa); // Insère le HTML de la page canapé dans la page product.html
 
 
 //Ecoute le bouton "Ajouter au panier"
 document.querySelector("#addToCart").addEventListener("click", (event) => {
-    let colorSelection = document.querySelector("#colors"); // Choix utilisateur couleur
-    let quantitySelection = document.querySelector("#quantity"); // Choix utilisateur quantité
-    if (colorSelection.value == "") { //Si couleur pas définie, message d'erreur
+    let colorSelection = document.querySelector("#colors").value; // Choix utilisateur couleur
+    let quantitySelection = document.querySelector("#quantity").value; // Choix utilisateur quantité
+    if (colorSelection == "") { //Si couleur pas définie, message d'erreur
         alert("Veuillez choisir une couleur !");
     }
-    else if (quantitySelection.value <= 0 || quantitySelection.value > 100) { // Si quantité <=0 ou <100, message d'erreur
+    else if (quantitySelection <= 0 || quantitySelection > 100) { // Si quantité <=0 ou <100, message d'erreur
         alert("Veuillez choisir une quantité comprise entre 1 et 100 !");
     }
     else { // Si couleur définie + quantité entre 1 et 100
-        let productChoice = document.querySelector("#title").textContent;
-        let productPrice = document.querySelector("#price").textContent;
-        let colorChoice = document.querySelector("#colors").value;
-        let quantityChoice = document.querySelector("#quantity").value;
-        alert(`Votre commande de ${quantityChoice} ${productChoice} couleur ${colorChoice} est ajoutée au panier !`);
+        alert(`Votre commande de ${quantitySelection} ${sofa.name} couleur ${colorSelection} est ajoutée au panier !`);
         addToCart({ // On ajoute le produit au panier
-            id: parseInt(productID),
-            "name": productChoice,
-            "color": colorChoice,
-            "quantity": parseInt(quantityChoice),
-            "price": parseInt(productPrice),
-            "imageUrl": sofa.imageUrl,
-            "altTxt": sofa.altTxt
+            id: productID,
+            "color": colorSelection,
+            "quantity": parseInt(quantitySelection)
         });
     }
 })
