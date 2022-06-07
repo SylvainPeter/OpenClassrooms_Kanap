@@ -1,20 +1,11 @@
 import { getDataById } from "./api.js";
 
 
-// Initialise le panier
-let emptyCart = [];
-let cart = localStorage.getItem("cart");
-if (cart == null) { // Si le panier n'existe pas
-    localStorage.setItem("cart", JSON.stringify(emptyCart)); // On crée le panier
-}
-else { // Si le panier existe déjà
-    JSON.parse(cart); // On récupère son contenu
-}
 
 
 let productID = new URL(location).searchParams.get("id"); // Récupère l'ID du canapé dans l'URL de la page product.html
-let sofa = await getDataById(productID); // Récupère les données du canapé correspondant à cet ID
-showProduct(sofa); // Insère les infos du canapé dans la page product.html
+let sofa = await getDataById(productID); // Récupère les données du canapé correspondant à cet ID via l'API
+showProduct(sofa); // Insère le HTML de la page canapé dans la page product.html
 
 
 //Ecoute le bouton "Ajouter au panier"
@@ -47,7 +38,7 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
 
 
 // Card d'un canapé
-function showProduct(sofa) { 
+function showProduct(sofa) {
     document.querySelector(".item__img").innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
     document.querySelector("#title").textContent = sofa.name;
     document.querySelector("#description").textContent = sofa.description;
@@ -62,7 +53,11 @@ function showProduct(sofa) {
 
 // Ajoute un produit au panier
 function addToCart(product) {
-    let cart = JSON.parse(localStorage.getItem("cart"));// Récupère le panier
+    let cart = JSON.parse(localStorage.getItem("cart"));
+    if (cart == null) { // Si le panier n'existe pas
+        cart = [];
+    }
+    // Récupère le panier
     let foundSameProduct = cart.find(p => p.id == product.id && p.color == product.color);
     if (foundSameProduct != undefined) { // Si un produit de cette couleur existe déjà
         foundSameProduct.quantity += product.quantity; // On augmente simplement sa quantité

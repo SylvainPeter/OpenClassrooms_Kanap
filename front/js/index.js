@@ -1,13 +1,16 @@
 import { getData } from "./api.js";
 
-// Récupère les données de tous les canapés
+// Récupère les données de tous les canapés via l'API
 let sofaList = await getData();
 
-// Insère la card de chaque canapé dans la page index.html
+// Génère le HTML des canapés
+let allSofas = "";
 sofaList.forEach((sofa) => {
-    document.querySelector(".items").innerHTML += displayProduct(sofa);
+    allSofas += displayProduct(sofa);
 })
 
+// Insère le HTML des canapés dans la page index.html
+document.querySelector(".items").innerHTML += allSofas;
 
 // Card d'un canapé
 function displayProduct (sofa) {
