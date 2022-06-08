@@ -42,6 +42,69 @@ deleteButtons.forEach((button, index) => {
     })
 })
 
+// Surveille les champs du formulaire
+let firstName = document.querySelector("#firstName");
+let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+let lastName = document.querySelector("#lastName");
+let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
+let address = document.querySelector("#address");
+let addressErrorMsg = document.querySelector("#addressErrorMsg");
+let city = document.querySelector("#city");
+let cityErrorMsg = document.querySelector("#cityErrorMsg");
+let email = document.querySelector("#email");
+let emailErrorMsg = document.querySelector("#emailErrorMsg");
+let regex1 = /^[a-zA-ZÀ-ÿ]*$/;
+let regex2 = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
+let regex3 = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+firstName.addEventListener("change", () => { // Contrôle le champ Prénom
+    if (regex1.test(firstName.value)) {
+        firstNameErrorMsg.innerHTML = " ";
+    }
+    else {
+        firstNameErrorMsg.innerHTML = "Veuillez entrer le prénom au format correct";
+    }
+})
+
+lastName.addEventListener("change", () => { // Contrôle le champ Nom
+    if (regex1.test(lastName.value)) {
+        lastNameErrorMsg.innerHTML = " ";
+    }
+    else {
+        lastNameErrorMsg.innerHTML = "Veuillez entrer le nom au format correct";
+    }
+})
+
+address.addEventListener("change", () => { // Contrôle le champ Adresse
+    if (regex2.test(address.value)) {
+        addressErrorMsg.innerHTML = " ";
+    }
+    else {
+        addressErrorMsg.innerHTML = "Veuillez entrer l'adresse au format correct";
+    }
+})
+
+city.addEventListener("change", () => { // Contrôle le champ Ville
+    if (regex1.test(city.value)) {
+        cityErrorMsg.innerHTML = " ";
+    }
+    else {
+        cityErrorMsg.innerHTML = "Veuillez entrer la ville au format correct";
+    }
+})
+
+email.addEventListener("change", () => { // Contrôle le champ Email
+    if (regex3.test(email.value)) {
+        emailErrorMsg.innerHTML = " ";
+    }
+    else {
+        emailErrorMsg.innerHTML = "Veuillez entrer l'adresse email au format correct";
+    }
+})
+
+
+
+// FONCTIONS
 
 // Card pour chaque produit
 function displayCartProducts(article, data) {
