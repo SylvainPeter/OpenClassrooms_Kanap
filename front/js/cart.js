@@ -53,55 +53,81 @@ let city = document.querySelector("#city");
 let cityErrorMsg = document.querySelector("#cityErrorMsg");
 let email = document.querySelector("#email");
 let emailErrorMsg = document.querySelector("#emailErrorMsg");
+let orderBtn = document.querySelector("#order");
 let regex1 = /^[a-zA-ZÀ-ÿ]*$/;
 let regex2 = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 let regex3 = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
 firstName.addEventListener("change", () => { // Contrôle le champ Prénom
     if (regex1.test(firstName.value)) {
-        firstNameErrorMsg.innerHTML = " ";
+        firstNameErrorMsg.innerHTML = "";
     }
     else {
         firstNameErrorMsg.innerHTML = "Veuillez entrer le prénom au format correct";
     }
 })
-
 lastName.addEventListener("change", () => { // Contrôle le champ Nom
     if (regex1.test(lastName.value)) {
-        lastNameErrorMsg.innerHTML = " ";
+        lastNameErrorMsg.innerHTML = "";
     }
     else {
         lastNameErrorMsg.innerHTML = "Veuillez entrer le nom au format correct";
     }
 })
-
 address.addEventListener("change", () => { // Contrôle le champ Adresse
     if (regex2.test(address.value)) {
-        addressErrorMsg.innerHTML = " ";
+        addressErrorMsg.innerHTML = "";
     }
     else {
         addressErrorMsg.innerHTML = "Veuillez entrer l'adresse au format correct";
     }
 })
-
 city.addEventListener("change", () => { // Contrôle le champ Ville
     if (regex1.test(city.value)) {
-        cityErrorMsg.innerHTML = " ";
+        cityErrorMsg.innerHTML = "";
     }
     else {
         cityErrorMsg.innerHTML = "Veuillez entrer la ville au format correct";
     }
 })
-
 email.addEventListener("change", () => { // Contrôle le champ Email
     if (regex3.test(email.value)) {
-        emailErrorMsg.innerHTML = " ";
+        emailErrorMsg.innerHTML = "";
     }
     else {
         emailErrorMsg.innerHTML = "Veuillez entrer l'adresse email au format correct";
     }
 })
 
+// Surveille le bouton "Commander"
+orderBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    let contact = { // Objet contenant le contenu du formulaire
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value
+    };
+
+    let finalCart = productsList; // Array contenant le panier final... <-- NE DOIT CONTENIR QUE DES ID!!!!!....
+
+    /*    
+    //Requête JSON contenant un objet de contact et un tableau de produits 
+    // Retourne l'objet contact, le tableau produits et orderId (string)
+    
+    let postOrder = {
+            method: 'POST',
+            body: JSON.stringify(orderAPI),
+            headers: {
+                'Accept': 'application/json', 
+                "Content-Type": "application/json" 
+            },
+        };
+    */
+    console.log(contact);
+    console.log(finalCart);
+})
 
 
 // FONCTIONS

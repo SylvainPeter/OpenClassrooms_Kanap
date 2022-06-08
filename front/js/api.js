@@ -23,4 +23,24 @@ async function getDataById (productID) {
     return data;
 }
 
-export { getData, getDataById }
+// Poste la commande finale à l'API
+async function postData (productID) {
+    let data = await fetch(apiUrl + "/order", post)
+        .then(res => res.json())
+        .then(sofa => sofa)
+        .catch((err) => { // En cas d'erreur de récupération des données
+            console.log(err);
+        })
+        console.log(data);
+    return data;
+    /*  .then(responseAPI => {
+    console.log("respondeAPI : "+responseAPI.orderId);
+    localStorage.clear();                  
+   document.location.href = `confirmation.html?orderId=${responseAPI.orderId}`;           
+    })
+    */
+}
+
+
+export { getData, getDataById, postData }
+
