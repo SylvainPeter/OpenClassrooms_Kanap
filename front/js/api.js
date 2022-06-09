@@ -23,7 +23,6 @@ async function getDataById(productID) {
     return data;
 }
 
-
 // Poste la commande finale à l'API
 async function postData(orderId) {
     let data = await fetch(apiUrl + "/order", {
@@ -36,9 +35,8 @@ async function postData(orderId) {
     })
         .then(res => res.json())
         .then((data => {
-            // localStorage.clear();
-            localStorage.setItem("orderId", data.orderId);
-            document.location.href = `confirmation.html?orderId=${data.orderId}`;
+            localStorage.clear();
+            location.href = `confirmation.html?orderId=${data.orderId}`;
 
         }))
         .catch((err) => {
@@ -47,11 +45,6 @@ async function postData(orderId) {
     return data;
 }
 
-/*  .then(responseAPI => {
-console.log("respondeAPI : "+responseAPI.orderId);
-localStorage.clear();                  
-document.location.href = `confirmation.html?orderId=${responseAPI.orderId}`;           
-})
-*/
+
 export { getData, getDataById, postData }
 
