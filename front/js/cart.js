@@ -9,12 +9,14 @@ let stringRegex = /^[a-zA-ZÀ-ÿ]*$/;
 let addressRegex = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 let allProducts = "";
+let products = [];
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
 
 
 // Génère le HTML
 productsList.forEach((article) => { // pour chaque produit du panier
     let data = getDataById(article.id); // recupère data du canapé via l'API
+    console.log(data); // pending ????
     allProducts += displayCartProducts(article, data); // appelle function et rajoute le HTML à la string
 })
 
@@ -98,8 +100,7 @@ document.querySelector("#order").addEventListener("click", (event) => {
         email: email.value
     };
 
-    let products = []; // Récupère l'Id de tous les produits du panier
-    productsList.forEach((article) => {
+    productsList.forEach((article) => { // Récupère l'Id de tous les produits du panier
         products.push(article.id);
     });
 
@@ -113,7 +114,6 @@ document.querySelector("#order").addEventListener("click", (event) => {
 
 // Card pour chaque produit
 function displayCartProducts(article, data) {
-    console.log(data); // pending ????
     return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
     <div class="cart__item__img">
         <img src="${data.imageUrl}" alt="${data.altTxt}">
