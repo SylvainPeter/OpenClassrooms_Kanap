@@ -1,4 +1,4 @@
-import { getDataById } from "./api.js";
+import { getDataById, postData } from "./api.js";
 
 
 // Affiche le panier
@@ -43,7 +43,7 @@ deleteButtons.forEach((button, index) => {
 })
 
 // Surveille les champs du formulaire
-let firstName = document.querySelector("#firstName");
+let firstName = document.querySelector("#firstName"); 
 let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
 let lastName = document.querySelector("#lastName");
 let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
@@ -110,23 +110,14 @@ orderBtn.addEventListener("click", (event) => {
         email: email.value
     };
 
-    let finalCart = productsList; // Array contenant le panier final... <-- NE DOIT CONTENIR QUE DES ID!!!!!....
+    let products = [];
+    productsList.forEach((article) => {
+        products.push(article.id);
+    });
 
-    /*    
-    //Requête JSON contenant un objet de contact et un tableau de produits 
-    // Retourne l'objet contact, le tableau produits et orderId (string)
+    let orderId = {contact, products};
     
-    let postOrder = {
-            method: 'POST',
-            body: JSON.stringify(orderAPI),
-            headers: {
-                'Accept': 'application/json', 
-                "Content-Type": "application/json" 
-            },
-        };
-    */
-    console.log(contact);
-    console.log(finalCart);
+    postData(orderId);
 })
 
 
