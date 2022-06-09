@@ -1,12 +1,18 @@
 import { getDataById, postData } from "./api.js";
 
-
-// Affiche le panier
-let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés
+let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
+let addressErrorMsg = document.querySelector("#addressErrorMsg");
+let cityErrorMsg = document.querySelector("#cityErrorMsg");
+let emailErrorMsg = document.querySelector("#emailErrorMsg");
+let stringRegex = /^[a-zA-ZÀ-ÿ]*$/;
+let addressRegex = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
+let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+let allProducts = "";
+let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
 
 
 // Génère le HTML
-let allProducts = ""; // string vide
 productsList.forEach((article) => { // pour chaque produit du panier
     let data = getDataById(article.id); // recupère data du canapé via l'API
     allProducts += displayCartProducts(article, data); // appelle function et rajoute le HTML à la string
@@ -14,13 +20,11 @@ productsList.forEach((article) => { // pour chaque produit du panier
 
 // Hydrate la page cart.html
 document.querySelector("#cart__items").innerHTML += allProducts;
-// Affiche la quantité et le prix total du panier
-updateCart();
+updateCart(); // Met à jour le total affiché
 
 
 // Ecoute des champs "Quantité"
-let quantityForms = document.querySelectorAll(".itemQuantity");
-quantityForms.forEach((form, index) => {
+document.querySelectorAll(".itemQuantity").forEach((form, index) => {
     form.addEventListener("change", () => {
         let newQuantity = parseInt(form.value);
         if (newQuantity <= 0 || newQuantity > 100) { // Si quantité <=0 ou <100, message d'erreur
@@ -28,70 +32,54 @@ quantityForms.forEach((form, index) => {
         }
         else {
             changeQuantity(index, newQuantity); // Définit la nouvelle quantité
-            updateCart(); // Met à jour le total
+            updateCart(); // Met à jour le total affiché
         }
     })
 })
 
 // Ecoute des boutons "Supprimer"
-let deleteButtons = document.querySelectorAll(".deleteItem");
-deleteButtons.forEach((button, index) => {
+document.querySelectorAll(".deleteItem").forEach((button, index) => {
     button.addEventListener("click", () => {
         removeFromCart(index); // Supprime le produit
-        updateCart(); // Met à jour le total
+        updateCart(); // Met à jour le total affiché
     })
 })
 
-// Surveille les champs du formulaire
-let firstName = document.querySelector("#firstName"); 
-let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
-let lastName = document.querySelector("#lastName");
-let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
-let address = document.querySelector("#address");
-let addressErrorMsg = document.querySelector("#addressErrorMsg");
-let city = document.querySelector("#city");
-let cityErrorMsg = document.querySelector("#cityErrorMsg");
-let email = document.querySelector("#email");
-let emailErrorMsg = document.querySelector("#emailErrorMsg");
-let orderBtn = document.querySelector("#order");
-let regex1 = /^[a-zA-ZÀ-ÿ]*$/;
-let regex2 = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
-let regex3 = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-
-firstName.addEventListener("change", () => { // Contrôle le champ Prénom
-    if (regex1.test(firstName.value)) {
+// Ecoute les champs du formulaire
+document.querySelector("#firstName").addEventListener("change", () => { // Contrôle le champ Prénom
+    if (stringRegex.test(firstName.value)) {
         firstNameErrorMsg.innerHTML = "";
     }
     else {
         firstNameErrorMsg.innerHTML = "Veuillez entrer le prénom au format correct";
     }
 })
-lastName.addEventListener("change", () => { // Contrôle le champ Nom
-    if (regex1.test(lastName.value)) {
+document.querySelector("#lastName").addEventListener("change", () => { // Contrôle le champ Nom
+    if (stringRegex.test(lastName.value)) {
         lastNameErrorMsg.innerHTML = "";
     }
     else {
         lastNameErrorMsg.innerHTML = "Veuillez entrer le nom au format correct";
     }
 })
-address.addEventListener("change", () => { // Contrôle le champ Adresse
-    if (regex2.test(address.value)) {
+document.querySelector("#address").addEventListener("change", () => { // Contrôle le champ Adresse
+    if (addressRegex.test(address.value)) {
         addressErrorMsg.innerHTML = "";
     }
     else {
         addressErrorMsg.innerHTML = "Veuillez entrer l'adresse au format correct";
     }
 })
-city.addEventListener("change", () => { // Contrôle le champ Ville
-    if (regex1.test(city.value)) {
+document.querySelector("#city").addEventListener("change", () => { // Contrôle le champ Ville
+    if (stringRegex.test(city.value)) {
         cityErrorMsg.innerHTML = "";
     }
     else {
         cityErrorMsg.innerHTML = "Veuillez entrer la ville au format correct";
     }
 })
-email.addEventListener("change", () => { // Contrôle le champ Email
-    if (regex3.test(email.value)) {
+document.querySelector("#email").addEventListener("change", () => { // Contrôle le champ Email
+    if (emailRegex.test(email.value)) {
         emailErrorMsg.innerHTML = "";
     }
     else {
@@ -100,9 +88,9 @@ email.addEventListener("change", () => { // Contrôle le champ Email
 })
 
 // Surveille le bouton "Commander"
-orderBtn.addEventListener("click", (event) => {
+document.querySelector("#order").addEventListener("click", (event) => {
     event.preventDefault();
-    let contact = { // Objet contenant le contenu du formulaire
+    let contact = { // Récupère le contenu du formulaire
         firstName: firstName.value,
         lastName: lastName.value,
         address: address.value,
@@ -110,14 +98,14 @@ orderBtn.addEventListener("click", (event) => {
         email: email.value
     };
 
-    let products = [];
+    let products = []; // Récupère l'Id de tous les produits du panier
     productsList.forEach((article) => {
         products.push(article.id);
     });
 
-    let orderId = {contact, products};
-    
-    postData(orderId);
+    let orderId = { contact, products }; // La commande finale
+
+    postData(orderId); // Envoi de la commande finale à l'API
 })
 
 
@@ -170,11 +158,11 @@ function updateCart() {
 
 // Retourne le nombre de produits dans le panier
 function getNumberProduct() {
-    let totalNumber = 0;
-    for (let product of productsList) {
-        totalNumber += product.quantity;
+    let totalNumber = 0; // on initialise le total
+    for (let product of productsList) { // pour chaque produit
+        totalNumber += product.quantity; // on récupère la quantité et on l'ajoute au total
     }
-    return totalNumber;
+    return totalNumber; // on envoie le total
 }
 
 // Retourne le prix total du panier
