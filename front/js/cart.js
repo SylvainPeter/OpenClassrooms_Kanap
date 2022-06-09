@@ -8,7 +8,7 @@ let emailErrorMsg = document.querySelector("#emailErrorMsg");
 let stringRegex = /^[a-zA-ZÀ-ÿ]*$/;
 let addressRegex = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-let allProducts = "";
+let cartHtml = "";
 let products = [];
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
 
@@ -17,11 +17,11 @@ let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous 
 productsList.forEach((article) => { // pour chaque produit du panier
     let data = getDataById(article.id); // recupère data du canapé via l'API
     console.log(data); // pending ????
-    allProducts += displayCartProducts(article, data); // appelle function et rajoute le HTML à la string
+    cartHtml += displayCartProducts(article, data); // appelle function et rajoute le HTML à la string
 })
 
 // Hydrate la page cart.html
-document.querySelector("#cart__items").innerHTML += allProducts;
+document.querySelector("#cart__items").innerHTML += cartHtml;
 updateCart(); // Met à jour le total affiché
 
 
@@ -122,7 +122,7 @@ function displayCartProducts(article, data) {
         <div class="cart__item__content__description">
             <h2>${data.name}</h2>
             <p>${article.color}</p>
-            <p id="article__price">${data.price} €</p>
+            <p id="article__price">${article.price} €</p>
         </div>
     <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
@@ -152,26 +152,12 @@ function changeQuantity(product, quantity) {
 
 // Affiche la quantité et le prix total du panier
 function updateCart() {
-    document.querySelector("#totalQuantity").innerHTML = getNumberProduct();
-    document.querySelector("#totalPrice").innerHTML = getTotalPrice();
-}
-
-// Retourne le nombre de produits dans le panier
-function getNumberProduct() {
-    let totalNumber = 0; // on initialise le total
-    for (let product of productsList) { // pour chaque produit
-        totalNumber += product.quantity; // on récupère la quantité et on l'ajoute au total
-    }
-    return totalNumber; // on envoie le total
-}
-
-// Retourne le prix total du panier
-function getTotalPrice() {
+    let quantityArray = productsList.map(element => { return element.quantity }); // Crée un tableau des quantités
+    let totalQuantity = quantityArray.reduce((acc, x) => acc + x) // Additionne les quantités
     let totalPrice = 0;
     for (let product of productsList) {
         totalPrice += product.quantity * product.price;
     }
-    return totalPrice;
+    document.querySelector("#totalQuantity").innerHTML = totalQuantity;
+    document.querySelector("#totalPrice").innerHTML = totalPrice;
 }
-
-

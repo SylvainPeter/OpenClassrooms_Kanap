@@ -24,7 +24,8 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
         addToCart({ // On ajoute le produit au panier
             id: productID,
             "color": colorSelection,
-            "quantity": parseInt(quantitySelection)
+            "quantity": parseInt(quantitySelection),
+            "price" : 10 // LIGNE A SUPPRIMER
         });
     }
 })
