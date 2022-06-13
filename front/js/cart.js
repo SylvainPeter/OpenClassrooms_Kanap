@@ -8,20 +8,28 @@ let emailErrorMsg = document.querySelector("#emailErrorMsg");
 let stringRegex = /^[a-zA-ZÀ-ÿ]*$/;
 let addressRegex = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-let cartHtml = "";
 let products = [];
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
+let totalPrice = 0;
 
 
-// Génère le HTML
-productsList.forEach((article) => { // Pour chaque produit du panier
-    let data = getDataById(article.id); // Recupère data du canapé via l'API
-    console.log(data); // Pending ????
-    cartHtml += displayCartProducts(article, data); // Rajoute le HTML à la string cartHtml
-})
+async function createCartHtml() {
+    let cartHtml = "";
+    for (const article of productsList) {
+        let data = await getDataById(article.id); // Recupère data du canapé via l'API
+        cartHtml += displayCartProducts(article, data); // Rajoute le HTML à la string cartHtml
+        totalPrice += parseInt(data.price) * article.quantity;
+        console.log(data.price);
+        console.log(article.quantity);
+        console.log(totalPrice)
+   
+    }
+    return cartHtml;
+}
 
 // Hydrate la page cart.html avec la string cartHtml
-document.querySelector("#cart__items").innerHTML += cartHtml;
+document.querySelector("#cart__items").innerHTML += await createCartHtml();
+
 updateCartTotal(); // Met à jour le total affiché
 
 
@@ -142,22 +150,26 @@ function removeFromCart(index) {
     productsList.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(productsList)); // On sauvegarde le nouveau panier
     location.reload(); // On actualise la page cart.html
+    // AJOUTER LOGIQUE TOTALPRICE
 }
 
 // Change la quantité d'un produit
 function changeQuantity(product, quantity) {
     productsList[product].quantity = quantity;
     localStorage.setItem("cart", JSON.stringify(productsList)); // On sauvegarde le nouveau panier
+   // AJOUTER LOGIQUE TOTALPRICE
 }
 
 // Affiche la quantité et le prix total du panier
 function updateCartTotal() {
     let quantityArray = productsList.map(element => { return element.quantity }); // Crée un tableau des quantités
     let totalQuantity = quantityArray.reduce((acc, x) => acc + x) // Additionne les quantités
-    let totalPrice = 0;
+
+  /*  let totalPrice = 0;
     for (let product of productsList) {
         totalPrice += product.quantity * product.price;
     }
+*/
     document.querySelector("#totalQuantity").innerHTML = totalQuantity;
     document.querySelector("#totalPrice").innerHTML = totalPrice;
 }
