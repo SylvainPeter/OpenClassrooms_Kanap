@@ -7,29 +7,14 @@ let cityErrorMsg = document.querySelector("#cityErrorMsg");
 let emailErrorMsg = document.querySelector("#emailErrorMsg");
 let stringRegex = /^[a-zA-ZÀ-ÿ]*$/;
 let addressRegex = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
-let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z]{2,4})+$/;
 let products = [];
 let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
 let totalPrice = 0;
 
 
-async function createCartHtml() {
-    let cartHtml = "";
-    for (const article of productsList) {
-        let data = await getDataById(article.id); // Recupère data du canapé via l'API
-        cartHtml += displayCartProducts(article, data); // Rajoute le HTML à la string cartHtml
-        totalPrice += parseInt(data.price) * article.quantity;
-        console.log(data.price);
-        console.log(article.quantity);
-        console.log(totalPrice)
-   
-    }
-    return cartHtml;
-}
-
-// Hydrate la page cart.html avec la string cartHtml
+// Hydrate la page cart.html
 document.querySelector("#cart__items").innerHTML += await createCartHtml();
-
 updateCartTotal(); // Met à jour le total affiché
 
 
@@ -120,6 +105,16 @@ document.querySelector("#order").addEventListener("click", (event) => {
 
 // FONCTIONS
 
+// Récupère les données du panier
+async function createCartHtml() {
+    let cartHtml = "";
+    for (const article of productsList) {
+        let data = await getDataById(article.id); // Recupère data des canapés via l'API
+        cartHtml += displayCartProducts(article, data); // Rajoute le HTML à cartHtml
+    }
+    return cartHtml;
+}
+
 // Card pour chaque produit
 function displayCartProducts(article, data) {
     return `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
@@ -149,27 +144,26 @@ function displayCartProducts(article, data) {
 function removeFromCart(index) {
     productsList.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(productsList)); // On sauvegarde le nouveau panier
-    location.reload(); // On actualise la page cart.html
-    // AJOUTER LOGIQUE TOTALPRICE
+    document.location.reload(); // On actualise la page cart.html
 }
 
 // Change la quantité d'un produit
 function changeQuantity(product, quantity) {
     productsList[product].quantity = quantity;
     localStorage.setItem("cart", JSON.stringify(productsList)); // On sauvegarde le nouveau panier
-   // AJOUTER LOGIQUE TOTALPRICE
 }
 
 // Affiche la quantité et le prix total du panier
-function updateCartTotal() {
+async function updateCartTotal() {
     let quantityArray = productsList.map(element => { return element.quantity }); // Crée un tableau des quantités
     let totalQuantity = quantityArray.reduce((acc, x) => acc + x) // Additionne les quantités
-
-  /*  let totalPrice = 0;
-    for (let product of productsList) {
-        totalPrice += product.quantity * product.price;
+    totalPrice = 0;
+    for (const article of productsList) {
+        let data = await getDataById(article.id); // Recupère data des canapés via l'API
+        totalPrice += data.price * article.quantity; // Calcule le prix total du panier
     }
-*/
     document.querySelector("#totalQuantity").innerHTML = totalQuantity;
     document.querySelector("#totalPrice").innerHTML = totalPrice;
 }
+
+
