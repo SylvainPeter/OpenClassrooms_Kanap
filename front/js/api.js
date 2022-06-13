@@ -35,8 +35,8 @@ async function postData(orderId) {
     })
         .then(res => res.json())
         .then((data => {
-            localStorage.clear();
-            location.href = `confirmation.html?orderId=${data.orderId}`;
+            localStorage.clear(); // Vide le panier
+            location.href = `confirmation.html?orderId=${data.orderId}`; // Redirige vers la page de confirmation
 
         }))
         .catch((err) => {

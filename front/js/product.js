@@ -1,8 +1,6 @@
 import { getDataById } from "./api.js";
 
 
-
-
 let productID = new URL(location).searchParams.get("id"); // Récupère l'ID du canapé dans l'URL de la page product.html
 
 let sofa = await getDataById(productID); // Récupère les données du canapé correspondant à cet ID via l'API
@@ -25,7 +23,6 @@ document.querySelector("#addToCart").addEventListener("click", (event) => {
             id: productID,
             "color": colorSelection,
             "quantity": parseInt(quantitySelection),
-            "price" : 10 // LIGNE A SUPPRIMER
         });
     }
 })
@@ -38,7 +35,7 @@ function showProduct(sofa) {
     document.querySelector("#description").textContent = sofa.description;
     document.querySelector("#price").textContent = sofa.price;
     for (let color of sofa.colors) { // Pour chaque couleur disponible
-        let productColor = document.createElement("option"); // On crée une option couleur
+        let productColor = document.createElement("option"); // On récupère toutes les options couleur
         document.querySelector("#colors").appendChild(productColor);
         productColor.value = color;
         productColor.innerHTML = color;
@@ -47,17 +44,16 @@ function showProduct(sofa) {
 
 // Ajoute un produit au panier
 function addToCart(product) {
-    let cart = JSON.parse(localStorage.getItem("cart"));
+    let cart = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
     if (cart == null) { // Si le panier n'existe pas
-        cart = [];
+        cart = []; // On le créé
     }
-    // Récupère le panier
     let foundSameProduct = cart.find(p => p.id == product.id && p.color == product.color);
     if (foundSameProduct != undefined) { // Si un produit de cette couleur existe déjà
         foundSameProduct.quantity += product.quantity; // On augmente simplement sa quantité
     }
     else {
-        cart.push(product); // Si un produit de cette couleur n'existe pas déjà, on ajoute ce nouveau produit au panier
+        cart.push(product); // Sinon, on ajoute ce nouveau produit au panier
     }
-    localStorage.setItem("cart", JSON.stringify(cart)); // On sauve le panier
+    localStorage.setItem("cart", JSON.stringify(cart)); // On sauvegarde le panier
 }

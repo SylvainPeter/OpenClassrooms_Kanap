@@ -14,15 +14,15 @@ let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous 
 
 
 // Génère le HTML
-productsList.forEach((article) => { // pour chaque produit du panier
-    let data = getDataById(article.id); // recupère data du canapé via l'API
-    console.log(data); // pending ????
-    cartHtml += displayCartProducts(article, data); // appelle function et rajoute le HTML à la string
+productsList.forEach((article) => { // Pour chaque produit du panier
+    let data = getDataById(article.id); // Recupère data du canapé via l'API
+    console.log(data); // Pending ????
+    cartHtml += displayCartProducts(article, data); // Rajoute le HTML à la string cartHtml
 })
 
-// Hydrate la page cart.html
+// Hydrate la page cart.html avec la string cartHtml
 document.querySelector("#cart__items").innerHTML += cartHtml;
-updateCart(); // Met à jour le total affiché
+updateCartTotal(); // Met à jour le total affiché
 
 
 // Ecoute des champs "Quantité"
@@ -34,7 +34,7 @@ document.querySelectorAll(".itemQuantity").forEach((form, index) => {
         }
         else {
             changeQuantity(index, newQuantity); // Définit la nouvelle quantité
-            updateCart(); // Met à jour le total affiché
+            updateCartTotal(); // Met à jour le total affiché
         }
     })
 })
@@ -43,7 +43,7 @@ document.querySelectorAll(".itemQuantity").forEach((form, index) => {
 document.querySelectorAll(".deleteItem").forEach((button, index) => {
     button.addEventListener("click", () => {
         removeFromCart(index); // Supprime le produit
-        updateCart(); // Met à jour le total affiché
+        updateCartTotal(); // Met à jour le total affiché
     })
 })
 
@@ -122,7 +122,7 @@ function displayCartProducts(article, data) {
         <div class="cart__item__content__description">
             <h2>${data.name}</h2>
             <p>${article.color}</p>
-            <p id="article__price">${article.price} €</p>
+            <p id="article__price">${data.price} €</p>
         </div>
     <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
@@ -140,18 +140,18 @@ function displayCartProducts(article, data) {
 // Supprime un produit du panier
 function removeFromCart(index) {
     productsList.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le nouveau panier
+    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauvegarde le nouveau panier
     location.reload(); // On actualise la page cart.html
 }
 
 // Change la quantité d'un produit
 function changeQuantity(product, quantity) {
     productsList[product].quantity = quantity;
-    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauve le nouveau panier
+    localStorage.setItem("cart", JSON.stringify(productsList)); // On sauvegarde le nouveau panier
 }
 
 // Affiche la quantité et le prix total du panier
-function updateCart() {
+function updateCartTotal() {
     let quantityArray = productsList.map(element => { return element.quantity }); // Crée un tableau des quantités
     let totalQuantity = quantityArray.reduce((acc, x) => acc + x) // Additionne les quantités
     let totalPrice = 0;
