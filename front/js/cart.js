@@ -9,9 +9,9 @@ let stringRegex = /^[a-zA-ZÀ-ÿ]*$/;
 let addressRegex = /^[0-9]{1,4}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
 let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z]{2,4})+$/;
 let products = [];
-let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
 let totalPrice = 0;
-
+let totalQuantity = 0;
+let productsList = JSON.parse(localStorage.getItem("cart")); // Récupère tous les produits stockés dans le panier
 
 // Hydrate la page cart.html
 document.querySelector("#cart__items").innerHTML += await createCartHtml();
@@ -156,14 +156,15 @@ function changeQuantity(product, quantity) {
 // Affiche la quantité et le prix total du panier
 async function updateCartTotal() {
     let quantityArray = productsList.map(element => { return element.quantity }); // Crée un tableau des quantités
-    let totalQuantity = quantityArray.reduce((acc, x) => acc + x) // Additionne les quantités
-    totalPrice = 0;
-    for (const article of productsList) {
-        let data = await getDataById(article.id); // Recupère data des canapés via l'API
-        totalPrice += data.price * article.quantity; // Calcule le prix total du panier
+    if (quantityArray.length > 0) { // Si la quantité est supérieure à 0
+        totalQuantity = quantityArray.reduce((acc, x) => acc + x) // On calcule le total de la quantité
+        for (const article of productsList) { // On récupère le prix des canapés via l'API
+            let data = await getDataById(article.id);
+            totalPrice += data.price * article.quantity; // On calcule le prix total du panier
+        }
     }
-    document.querySelector("#totalQuantity").innerHTML = totalQuantity;
-    document.querySelector("#totalPrice").innerHTML = totalPrice;
+    document.querySelector("#totalQuantity").innerHTML = totalQuantity; // On affiche la quantité totale
+    document.querySelector("#totalPrice").innerHTML = totalPrice; // On affiche le prix total
 }
 
 
